@@ -6,12 +6,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.demo.entity.*;
 import com.example.demo.mapper.*;
 import com.example.demo.service.CURDService;
+import com.example.demo.util.Utils;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,18 +27,19 @@ import java.util.List;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class GetController {
-    CURDService curdService;
-    TaskMapper taskMapper;
-    ResultMapper resultMapper;
-    OriPicMapper oriPicMapper;
-    MarkPicMapper markPicMapper;
-    DetectResultMapper detectResultMapper;
-    MsgMapper msgMapper;
+    final CURDService curdService;
+    final TaskMapper taskMapper;
+    final ResultMapper resultMapper;
+    final OriPicMapper oriPicMapper;
+    final MarkPicMapper markPicMapper;
+    final DetectResultMapper detectResultMapper;
+    final MsgMapper msgMapper;
+    final BatchMapper batchMapper;
 
     /**
      * 前端根据图片id获取原始图片.
      *
-     * @param id 图片id
+     * @param id   图片id
      * @param resp http请求
      * @author koveer
      * -2023/2/8 16:40
@@ -43,7 +47,7 @@ public class GetController {
     @GetMapping(value = "/OriImage/{id}", produces = "application/json;charset=utf-8")
     public void getOriImage(@PathVariable("id") Integer id, HttpServletResponse resp) throws Exception {
         OriPic oriPic = oriPicMapper.selectById(id);
-        byte[] image = oriPic.getOriPic();
+        byte[] image = Files.readAllBytes(Paths.get(Utils.Base64ToPath(oriPic.getOriPic())));
         ServletOutputStream out = resp.getOutputStream();
         out.write(image);
         out.flush();
@@ -61,7 +65,7 @@ public class GetController {
     @GetMapping(value = "/MarkImage/{id}", produces = "application/json;charset=utf-8")
     public void getMarkImage(@PathVariable("id") Integer id, HttpServletResponse resp) throws Exception {
         MarkPic markPic = markPicMapper.selectById(id);
-        byte[] image = markPic.getMarkPic();
+        byte[] image = Files.readAllBytes(Paths.get(Utils.Base64ToPath(markPic.getMarkPic())));
         resp.setContentType("image/jpeg");
         ServletOutputStream out = resp.getOutputStream();
         out.write(image);
@@ -215,5 +219,15 @@ public class GetController {
     @GetMapping("/msg")
     public String msg() {
         return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, msgMapper.getNew()));
+    }
+
+    @GetMapping("/batch")
+    public String batch() {
+        return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, batchMapper.getNew()));
+    }
+
+    @GetMapping("/batch/{id}")
+    public String serchBatch(@PathVariable("id") int id) {
+        return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, batchMapper.selectById(id)));
     }
 }

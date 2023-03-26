@@ -2,6 +2,7 @@ package com.example.demo.util;
 
 import org.springframework.util.Base64Utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,12 +49,13 @@ public class Utils {
      * @author koveer
      * -2023/3/13 14:59
      */
-    public static String CutPic(String source, String target) {
+    public static String MovePic(String source, String target) {
 
         Path fromFile = Paths.get(source);
         Path toFile = Paths.get(target);
+        new File(new File(target).getPath()).mkdirs();
         try {
-            Files.move(fromFile, toFile, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+            Files.move(fromFile, toFile, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

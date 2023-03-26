@@ -18,4 +18,5 @@ public class Task {
     private Integer id;//检测任务的批次
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;//检测任务开始时间
+    private String batch;
 }

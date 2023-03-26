@@ -4,34 +4,33 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.entity.MarkPic;
 import com.example.demo.entity.OriPic;
 import com.example.demo.entity.Result;
-import com.example.demo.entity.Task;
 import com.example.demo.mapper.*;
+import com.example.demo.util.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class CURDService {
-    TaskMapper taskMapper;
-    OriPicMapper oriPicMapper;
-    MarkPicMapper markPicMapper;
-    ResultMapper resultMapper;
-    DetectService detectService;
-    MsgMapper msgMapper;
+    final TaskMapper taskMapper;
+    final OriPicMapper oriPicMapper;
+    final MarkPicMapper markPicMapper;
+    final ResultMapper resultMapper;
+    final DetectService detectService;
+    final MsgMapper msgMapper;
+    final BatchMapper batchMapper;
 
     @Value("${pythonPath}")
     String pythonPath;
+
+    @Value("${picSavePath}")
+    String picSavePath;
 
     /**
      * 将上传的原始图片存入数据库，可批量存入，每次存入的图片为同一任务，同一任务最多取5张图片
@@ -40,47 +39,47 @@ public class CURDService {
      * @return int 上传文件数
      * @author koveer
      */
-    @Deprecated
-    public int webUpload(MultipartFile[] files) {
-        if (files.length != 0) {
-            //创建任务的时间和ID
-            int i = 0;
-            //创建任务信息
-            Task task = new Task();
-            task.setCreateTime(new Date());
-            int id = taskMapper.insert(task);
-            int taskId = task.getId();
-            OriPic[] oriPic = new OriPic[5];
-
-
-            for (MultipartFile file :
-                    files) {
-                //上传超过5个文件时，只读取前5个
-                if (i == 6)
-                    break;
-                //原始图片及信息
-                oriPic[i] = new OriPic();
-                oriPic[i].setTaskId(taskId);
-                oriPic[i].setTaskNumber(i + 1);
-
-
-                try {
-                    oriPic[i].setOriPic(file.getBytes());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                i++;
-            }
-            for (int j = 0; j < AutoService.VAR; j++) {
-                if (oriPic[j] != null) {
-                    oriPicMapper.insert(oriPic[j]);
-                    //对图片进行处理
-//                    detectService.detect(oriPic[j]);
-                }
-            }
-        }
-        return files.length;
-    }
+//    @Deprecated
+//    public int webUpload(MultipartFile[] files) {
+//        if (files.length != 0) {
+//            //创建任务的时间和ID
+//            int i = 0;
+//            //创建任务信息
+//            Task task = new Task();
+//            task.setCreateTime(new Date());
+//            int id = taskMapper.insert(task);
+//            int taskId = task.getId();
+//            OriPic[] oriPic = new OriPic[5];
+//
+//
+//            for (MultipartFile file :
+//                    files) {
+//                //上传超过5个文件时，只读取前5个
+//                if (i == 6)
+//                    break;
+//                //原始图片及信息
+//                oriPic[i] = new OriPic();
+//                oriPic[i].setTaskId(taskId);
+//                oriPic[i].setTaskNumber(i + 1);
+//
+//
+////                try {
+//////                    oriPic[i].setOriPic(file.getBytes());
+////                } catch (IOException e) {
+////                    throw new RuntimeException(e);
+////                }
+//                i++;
+//            }
+//            for (int j = 0; j < AutoService.VAR; j++) {
+//                if (oriPic[j] != null) {
+//                    oriPicMapper.insert(oriPic[j]);
+//                    //对图片进行处理
+////                    detectService.detect(oriPic[j]);
+//                }
+//            }
+//        }
+//        return files.length;
+//    }
 
     /**
      * 递归删除文件夹
@@ -152,13 +151,26 @@ public class CURDService {
             oriPic.setOriId(markPic.getMarkId());
             oriPic.setTaskNumber(markPic.getTaskNumber());
             oriPic.setTaskId(markPic.getTaskId());
-            byte[] pic = new byte[0];
-            try {
-                pic = Files.readAllBytes(Paths.get(path));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            oriPic.setOriPic(pic);
+
+            //2.0 将图片移动到指定路径，存储图片路径
+            StringBuilder picname = new StringBuilder(path);
+            picname.reverse();
+            picname = new StringBuilder(picname.substring(0, picname.indexOf("\\")));
+            picname.reverse();
+            String batch = batchMapper.getNew();
+            String target = picSavePath + "\\" + batch + "\\ori\\" + picname;
+            System.out.println(target);
+            String oriBase64 = Utils.MovePic(path, target);
+            oriPic.setOriPic(oriBase64);
+
+            //1.0 将图片存入数据库
+//            byte[] pic = new byte[0];
+//            try {
+//                pic = Files.readAllBytes(Paths.get(path));
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//            oriPic.setOriPic(pic);
 
             int taskId = oriPic.getTaskId();
             int taskNumber = oriPic.getTaskNumber();
@@ -177,8 +189,8 @@ public class CURDService {
      * @param beginDate 起始日期
      * @param endDate   结束日期
      * @return com.example.demo.entity.Result[]
-     * @author SculptInk
-     * -2023/3/22 20:13
+     * @author koveer
+     * -2023/2/22 20:13
      */
     public Result[] searchByTime(Date beginDate, Date endDate) {
         Result[] results = taskMapper.selectResultAllByTaskDate(beginDate, endDate);

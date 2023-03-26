@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.Batch;
 import com.example.demo.entity.Message;
 import com.example.demo.entity.MessageCode;
+import com.example.demo.mapper.BatchMapper;
 import com.example.demo.service.AutoService;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.SecurityUtils;
@@ -14,7 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequiredArgsConstructor
 public class LoginController {
-    AutoService autoService;
+    final AutoService autoService;
+    final BatchMapper batchMapper;
 
     @PostMapping("/api/login")
     @ResponseBody
@@ -27,6 +30,8 @@ public class LoginController {
             Subject subject = SecurityUtils.getSubject();
             subject.login(upToken);
             String sessionId = (String) subject.getSession().getId();
+            if (batchMapper.selectById(1) == null)
+                batchMapper.insert(new Batch(null, "unknow"));
             autoService.autoRun();
             return new Message(MessageCode.SUCCESS, sessionId);
         } catch (Exception e) {

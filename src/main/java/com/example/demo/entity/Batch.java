@@ -2,19 +2,21 @@ package com.example.demo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+/**
+ * null
+ *
+ * @author koveer
+ * @since 1.0.0
+ * - 2023/3/23 20:37
+ */
 @Data
-@NoArgsConstructor
-@ApiModel
 @AllArgsConstructor
-public class MarkPic {
+public class Batch {
     @TableId(type = IdType.AUTO)
-    private Integer markId;
-    private Integer taskId;
-    private Integer taskNumber;
-    private String markPic;
+    private Integer id;
+
+    private String name;
 }
