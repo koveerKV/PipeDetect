@@ -184,7 +184,16 @@ public class DetectService {
         return list;
     }
 
-    //该方法用于判断合法输入
+    /**
+     * 对于形如 image 图片路径 [缺陷数量,缺陷类型] [缺陷数量,缺陷类型]@格式的字符串，外层层List每一个元素代表一张图片对应的输出
+     * 内层list[0]表示图片绝对路径，之后每个元素代表一种缺陷的数量.
+     *
+     * @param line image行
+     * @return java.util.List<java.util.List < java.lang.String>>
+     * @author koveer
+     * -2023/3/27 15:58
+     * @since 1.0
+     */
     public List<List<String>> judge(String[] line) {
         List<List<String>> list = new ArrayList<>();
         for (int i = 0; i < VAR; i++) {

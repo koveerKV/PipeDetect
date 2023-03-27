@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:9528")
 @RequiredArgsConstructor
 public class LoginController {
     final AutoService autoService;

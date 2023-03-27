@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @Api
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:9528")
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class GetController {

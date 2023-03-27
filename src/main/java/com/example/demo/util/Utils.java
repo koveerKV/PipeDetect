@@ -53,9 +53,12 @@ public class Utils {
 
         Path fromFile = Paths.get(source);
         Path toFile = Paths.get(target);
-        new File(new File(target).getPath()).mkdirs();
+        //确保target文件夹存在
+        new File(new File(target).getParent()).mkdirs();
+
         try {
-            Files.move(fromFile, toFile, StandardCopyOption.REPLACE_EXISTING);
+            if(new File(source).isFile())
+                Files.move(fromFile, toFile, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

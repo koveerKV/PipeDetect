@@ -64,13 +64,12 @@ public class AutoService {
             try {
                 while ((receive = reader.read()) != -1) {
                     sb.append((char) receive);
+                    //String[]数组，数组的0-VAR都是image行
                     sp = sb.toString().split("@");
                     if (sp.length == VAR + 1) {
                         System.out.println("--------------------");
                         System.out.println(Arrays.toString(sp));
-                        for (int i = 0; i < VAR; i++) {
-                            temp[i] = sp[i];
-                        }
+                        System.arraycopy(sp, 0, temp, 0, VAR);
                         curdService.upload(temp);
                         sb = new StringBuilder();
                     }
@@ -125,6 +124,7 @@ public class AutoService {
                     line = line.replaceAll("压坑缺陷", "B");
                     line = line.replaceAll("腐蚀缺陷", "C");
                     line = line.replaceAll("裂纹缺陷", "D");
+//                    line = line.replaceAll("bmp", "jpg");
                     if (line.startsWith("image")) {
                         writer.write(line);
                     } else if (line.startsWith("Results")) {
