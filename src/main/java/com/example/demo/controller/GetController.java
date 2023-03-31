@@ -221,11 +221,28 @@ public class GetController {
         return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, msgMapper.getNew()));
     }
 
+    /**
+     * 返回最新一条batch.
+     *
+     * @return java.lang.String
+     * @author koveer
+     * -2023/3/31 13:37
+     * @since 1.0
+     */
     @GetMapping("/batch")
     public String batch() {
         return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, batchMapper.getNew()));
     }
 
+    /**
+     * 获取对应编号的批次信息.
+     *
+     * @param id 批次编号
+     * @return java.lang.String
+     * @author koveer
+     * -2023/3/31 13:37
+     * @since 1.0
+     */
     @GetMapping("/batch/{id}")
     public String serchBatch(@PathVariable("id") int id) {
         return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, batchMapper.selectById(id)));

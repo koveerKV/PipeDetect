@@ -36,7 +36,6 @@ public class UpdateController {
      * -2023/3/23 21:01
      * @since 2.0
      */
-
     @PostMapping("/name")
     public String updateName(@RequestParam("name") String name) {
         String regex = "[\\w-]{1,20}";

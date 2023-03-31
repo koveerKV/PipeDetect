@@ -46,7 +46,7 @@ public class ShiroConfiguration {
         filterMap.put("/api/upload", "anon");
         filterMap.put("http://localhost:9528/#/login", "anon");
         //authc -- 认证之后访问（登录）
-//        filterMap.put("/**", "authc");
+        filterMap.put("/**", "authc");
         filterFactory.setFilterChainDefinitionMap(filterMap);
         return filterFactory;
     }
