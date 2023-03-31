@@ -25,6 +25,7 @@ public class CURDService {
     final DetectService detectService;
     final MsgMapper msgMapper;
     final BatchMapper batchMapper;
+    final WebSocketServer webSocketServer;
 
     @Value("${pythonPath}")
     String pythonPath;
@@ -176,8 +177,10 @@ public class CURDService {
             int taskNumber = oriPic.getTaskNumber();
             int i = oriPicMapper.insert(oriPic);
 
-            if (taskNumber == AutoService.VAR)
+            if (taskNumber == AutoService.VAR) {
                 msgMapper.Myinsert(taskId, 1);
+                webSocketServer.sendMessage("admin",msgMapper.getNew());
+            }
         }
         //***
         return true;
