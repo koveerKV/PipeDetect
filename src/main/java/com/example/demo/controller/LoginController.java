@@ -3,8 +3,10 @@ package com.example.demo.controller;
 import com.example.demo.entity.Batch;
 import com.example.demo.entity.Message;
 import com.example.demo.entity.MessageCode;
+import com.example.demo.entity.Name;
 import com.example.demo.mapper.BatchMapper;
 import com.example.demo.mapper.MsgMapper;
+import com.example.demo.mapper.NameMapper;
 import com.example.demo.service.AutoService;
 import com.example.demo.service.WebSocketServer;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 public class LoginController {
     final AutoService autoService;
     final BatchMapper batchMapper;
+    final NameMapper nameMapper;
     final WebSocketServer webSocketServer;
     final MsgMapper msgMapper;
 
@@ -39,6 +42,8 @@ public class LoginController {
             //开启websocket
             if (batchMapper.selectById(1) == null)
                 batchMapper.insert(new Batch(null, "unknow"));
+            if (nameMapper.selectById(1) == null)
+                nameMapper.insert(new Name(null, "void"));
             autoService.autoRun();
             return new Message(MessageCode.SUCCESS, sessionId);
         } catch (Exception e) {

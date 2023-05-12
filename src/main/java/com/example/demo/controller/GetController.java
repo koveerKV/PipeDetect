@@ -35,6 +35,7 @@ public class GetController {
     final DetectResultMapper detectResultMapper;
     final MsgMapper msgMapper;
     final BatchMapper batchMapper;
+    final NameMapper nameMapper;
 
     /**
      * 前端根据图片id获取原始图片.
@@ -222,29 +223,49 @@ public class GetController {
     }
 
     /**
-     * 返回最新一条batch.
+     * 返回最新一条令号.
      *
      * @return java.lang.String
      * @author koveer
      * -2023/3/31 13:37
      * @since 1.0
      */
-    @GetMapping("/batch")
-    public String batch() {
-        return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, batchMapper.getNew()));
+    @GetMapping("/batch/new")
+    public String newBatch() {
+        return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, batchMapper.getNew())).replace("name","Value");
     }
 
     /**
-     * 获取对应编号的批次信息.
+     * 返回最新一条图号.
      *
-     * @param id 批次编号
      * @return java.lang.String
      * @author koveer
-     * -2023/3/31 13:37
+     * -2023/5/6 19:47
      * @since 1.0
      */
-    @GetMapping("/batch/{id}")
-    public String serchBatch(@PathVariable("id") int id) {
-        return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, batchMapper.selectById(id)));
+    @GetMapping("/pname/new")
+    public String newName() {
+        return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, nameMapper.getNew())).replace("pName","Value");
     }
+
+    @GetMapping("/batch")
+    public String batch() {
+        Batch[] batches = batchMapper.selectAll();
+        return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, batches)).replace("name","Value");
+    }
+
+    /**
+     * 返回最新一条图号.
+     *
+     * @return java.lang.String
+     * @author koveer
+     * -2023/5/6 19:47
+     * @since 1.0
+     */
+    @GetMapping("/pname")
+    public String name() {
+        Name[] names = nameMapper.selectAll();
+        return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, names)).replace("pName","Value");
+    }
+
 }

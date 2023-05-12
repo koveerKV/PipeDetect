@@ -16,5 +16,7 @@ public class OriPic {
     private Integer oriId;//原始图片id
     private Integer taskId;//对应的任务批次
     private Integer taskNumber;//该批次中，图片序号
+
+    private String pName;
     private String oriPic;//原始图片
 }

@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 public class NewTask {
     private Integer id;
     private Integer pid;
+    private String batch;
+    private String pName;
     private Integer def1;//缺陷类型
     private Integer def2;//缺陷类型
     private Integer def3;//缺陷类型

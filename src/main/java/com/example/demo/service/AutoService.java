@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.Arrays;
 
 /**
  * 运行逻辑如下，调用该服务的autoRun（）方法，启动管道读写线程
@@ -67,9 +66,10 @@ public class AutoService {
                     //String[]数组，数组的0-VAR都是image行
                     sp = sb.toString().split("@");
                     if (sp.length == VAR + 1) {
-                        System.out.println("--------------------");
-                        System.out.println(Arrays.toString(sp));
+//                        System.out.println("--------------------");
+//                        System.out.println(Arrays.toString(sp));
                         System.arraycopy(sp, 0, temp, 0, VAR);
+//                        new Thread(()->curdService.upload(temp)).start();
                         curdService.upload(temp);
                         sb = new StringBuilder();
                     }

@@ -26,6 +26,7 @@ public class CURDService {
     final MsgMapper msgMapper;
     final BatchMapper batchMapper;
     final WebSocketServer webSocketServer;
+    final NameMapper nameMapper;
 
     @Value("${pythonPath}")
     String pythonPath;
@@ -91,21 +92,25 @@ public class CURDService {
      * -2023/2/17 0:18
      */
     public void deleteFile(String filePath, boolean deleteSelf, String con) {
-        File file = new File(filePath);
-        File file2 = new File(con);
-        if (file.isFile())  //判断是否为文件，是，则删除
-        {
-            file.delete();
-        } else //不为文件，则为文件夹
-        {
-            String[] childFilePath = file.list();//获取文件夹下所有文件相对路径
-            if (childFilePath != null) {
-                for (String path : childFilePath) {
-                    deleteFile(file.getAbsoluteFile() + "/" + path, deleteSelf, con);//递归，对每个都进行判断
+        try {
+            File file = new File(filePath);
+            File file2 = new File(con);
+            if (file.isFile())  //判断是否为文件，是，则删除
+            {
+                file.delete();
+            } else //不为文件，则为文件夹
+            {
+                String[] childFilePath = file.list();//获取文件夹下所有文件相对路径
+                if (childFilePath != null) {
+                    for (String path : childFilePath) {
+                        deleteFile(file.getAbsoluteFile() + "/" + path, deleteSelf, con);//递归，对每个都进行判断
+                    }
+                    if (deleteSelf && !file.getPath().equals(file2.getPath()))
+                        file.delete(); // 如果不保留文件夹本身 则执行此行代码
                 }
-                if (deleteSelf && !file.getPath().equals(file2.getPath()))
-                    file.delete(); // 如果不保留文件夹本身 则执行此行代码
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -122,7 +127,7 @@ public class CURDService {
      */
     public void init(String filePath) {
         deleteFile(filePath, true);
-        deleteFile(pythonPath + "\\runs\\detect", true);
+        deleteFile(pythonPath + "\\runs\\detect\\exp", true);
     }
 
     /**
@@ -152,6 +157,7 @@ public class CURDService {
             oriPic.setOriId(markPic.getMarkId());
             oriPic.setTaskNumber(markPic.getTaskNumber());
             oriPic.setTaskId(markPic.getTaskId());
+            oriPic.setPName(nameMapper.getNew());
 
             //2.0 将图片移动到指定路径，存储图片路径
             StringBuilder picname = new StringBuilder(path);

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Example</title>
+    <script>
+        // Create a new WebSocket object
+        var ws = new WebSocket("ws://127.0.0.1:8080/api/websocket/admin");
+
+        // When the WebSocket is open, do this
+        ws.onopen = function() {
+            console.log("WebSocket opened");
+        };
+
+        // When the WebSocket receives a message, do this
+        ws.onmessage = function(event) {
+            console.log("Received message: " + event.data);
+
+            // Display the received data in the HTML page
+            var dataElement = document.getElementById("data");
+            dataElement.innerHTML = event.data;
+        };
+
+        // When the WebSocket is closed, do this
+        ws.onclose = function() {
+            console.log("WebSocket closed");
+        };
+    </script>
+</head>
+<body>
+<h1>WebSocket Example</h1>
+<p id="data"></p>
+</body>
+</html>

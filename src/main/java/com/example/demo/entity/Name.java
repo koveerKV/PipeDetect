@@ -7,18 +7,18 @@ import lombok.Data;
 import lombok.ToString;
 
 /**
- * null
+ * null.
  *
  * @author koveer
- * @since 2.0
- * - 2023/3/23 20:37
+ * @since 1.0
+ * - 2023/5/5 21:20
  */
 @Data
 @AllArgsConstructor
 @ToString
-public class Batch {
+public class Name {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    private String name;
+    private String pName;
 }

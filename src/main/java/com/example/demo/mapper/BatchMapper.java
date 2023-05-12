@@ -17,4 +17,7 @@ public interface BatchMapper extends BaseMapper<Batch> {
 
     @Select("SELECT n.name FROM pic.batch n where n.id = (SELECT MAX(id) FROM pic.batch) ")
     String getNew();
+
+    @Select("SELECT * FROM pic.batch")
+    Batch[] selectAll();
 }
