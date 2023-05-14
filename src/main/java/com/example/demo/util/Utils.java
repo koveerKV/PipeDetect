@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 /**
  * 工具.
@@ -57,12 +58,34 @@ public class Utils {
         new File(new File(target).getParent()).mkdirs();
 
         try {
-            if(new File(source).isFile())
+            if (new File(source).isFile()) {
                 Files.move(fromFile, toFile, StandardCopyOption.REPLACE_EXISTING);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return PathToBase64(target);
+    }
+
+    public static String CopyPic(String source, String target) {
+
+        Path fromFile = Paths.get(source);
+        Path toFile = Paths.get(target);
+        //确保target文件夹存在
+        new File(new File(target).getParent()).mkdirs();
+
+        try {
+            if (new File(source).isFile()) {
+                Files.copy(fromFile, toFile, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return PathToBase64(target);
+    }
+
+    public static List<String> readLine(String file) throws IOException {
+        return Files.readAllLines(Paths.get(file));
     }
 
 //    public static void SecretMove(Path fromFile,Path toFile){

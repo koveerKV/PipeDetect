@@ -3,10 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.MarkPic;
 import com.example.demo.entity.Result;
 import com.example.demo.entity.Task;
-import com.example.demo.mapper.BatchMapper;
-import com.example.demo.mapper.MarkPicMapper;
-import com.example.demo.mapper.ResultMapper;
-import com.example.demo.mapper.TaskMapper;
+import com.example.demo.mapper.*;
 import com.example.demo.util.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +25,7 @@ public class DetectService {
     final ResultMapper resultMapper;
     final TaskMapper taskMapper;
     final BatchMapper batchMapper;
+    final NameMapper nameMapper;
 
     @Value("${pythonPath}")
     String PythonPath;
@@ -84,6 +82,8 @@ public class DetectService {
             String markPicPath = pythonPath + "\\runs\\detect\\exp\\" + picname;
             //2.0 将图片移动到指定路径，存储图片路径
             String batch = batchMapper.getNew();
+            String pname = nameMapper.getNew();
+            Utils.CopyPic(markPicPath, "E:\\PIC\\" + batch + "\\mark\\" + pname + "\\" + picname);
             String markBase64 = Utils.MovePic(markPicPath, picSavePath + "\\" + batch + "\\mark\\" + picname);
             markPic.setMarkPic(markBase64);
 

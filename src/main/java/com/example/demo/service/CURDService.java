@@ -165,8 +165,9 @@ public class CURDService {
             picname = new StringBuilder(picname.substring(0, picname.indexOf("\\")));
             picname.reverse();
             String batch = batchMapper.getNew();
+            String pname = nameMapper.getNew();
             String target = picSavePath + "\\" + batch + "\\ori\\" + picname;
-            System.out.println(target);
+            Utils.CopyPic(path,"E:\\PIC\\" + batch + "\\ori\\" + pname + "\\" + picname);
             String oriBase64 = Utils.MovePic(path, target);
             oriPic.setOriPic(oriBase64);
 
@@ -223,5 +224,19 @@ public class CURDService {
         return results;
     }
 
-
+//    /**
+//     * 读取文件并录入数据库.
+//     *
+//     * @param s 文件路径
+//     * @author koveer
+//     * -2023/5/12 12:14
+//     * @since 1.0
+//     */
+//    public void readPName(String s) throws IOException {
+//        List<String> strings = Utils.readLine(s);
+//        for (String s1 :
+//                strings) {
+//            nameMapper.insert(new Name(null,s1));
+//        }
+//    }
 }
