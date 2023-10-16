@@ -8,7 +8,7 @@ import com.example.demo.mapper.BatchMapper;
 import com.example.demo.mapper.MsgMapper;
 import com.example.demo.mapper.NameMapper;
 import com.example.demo.service.AutoService;
-import com.example.demo.service.WebSocketServer;
+//import com.example.demo.service.WebSocketServer;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@CrossOrigin(origins = "http://localhost:9528")
+//@CrossOrigin(origins = "http://localhost:9528")
 @RequiredArgsConstructor
 public class LoginController {
     final AutoService autoService;
     final BatchMapper batchMapper;
     final NameMapper nameMapper;
-    final WebSocketServer webSocketServer;
+//    final WebSocketServer webSocketServer;
     final MsgMapper msgMapper;
 
     @PostMapping("/api/login")
@@ -59,24 +59,24 @@ public class LoginController {
         return "redirect:http://localhost:9528/#/login";
     }
 
-    @RequestMapping("/web")
-    public String web(){
-        class Inner extends Thread{
-            @Override
-            public void run() {
-                for (int i = 0; i < 10; i++) {
-                    webSocketServer.sendMessage("admin",msgMapper.getNew());
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-            }
-        }
-        Inner inner = new Inner();
-        inner.start();
-        return "websocket";
-    }
+//    @RequestMapping("/web")
+//    public String web(){
+//        class Inner extends Thread{
+//            @Override
+//            public void run() {
+//                for (int i = 0; i < 10; i++) {
+//                    webSocketServer.sendMessage("admin",msgMapper.getNew());
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                }
+//
+//            }
+//        }
+//        Inner inner = new Inner();
+//        inner.start();
+//        return "websocket";
+//    }
 }

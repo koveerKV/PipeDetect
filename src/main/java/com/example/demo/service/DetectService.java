@@ -9,10 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
 
 @Service
@@ -140,49 +136,49 @@ public class DetectService {
 
     }
 
-    /**
-     * 外层的list，每一个元素代表一张图片
-     * 内层的list，[0]代表图片地址，后面的元素代表缺陷数量和类型
-     *
-     * @return java.util.List<java.util.List < java.lang.String>>
-     * @author koveer
-     * -2023/2/20 14:04
-     */
-    @Deprecated
-    public List<List<String>> runDetect() {
-        Process proc;
-        List<List<String>> list = new ArrayList<>();
-        try {
-
-            String[] cmd = new String[]{pythonPath + "\\venv\\Scripts\\detect.bat"};
-            proc = Runtime.getRuntime().exec(cmd, null, new File(pythonPath + "\\venv\\Scripts"));
-            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream(), "gbk"));
-            String line = null;
-            while ((line = in.readLine()) != null) {
-                System.out.println("********************");
-                System.out.println(line);
-                if (line.startsWith("image")) {
-                    //temp[0] 图片位置 剩下的是缺陷数量 缺陷类型
-//                    System.out.println("********************");
-//                    System.out.println(line);
-                    String[] ss = line.split(" ");
-                    List<String> temp = new ArrayList<>();
-                    temp.add(ss[2].substring(0, ss[2].length() - 1));
-                    for (String s :
-                            ss) {
-                        if (s.startsWith("[") && s.endsWith("]"))
-                            temp.add(s.substring(1, s.length() - 1));
-                    }
-                    list.add(temp);
-                }
-            }
-            in.close();
-            proc.waitFor();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
+//    /**
+//     * 外层的list，每一个元素代表一张图片
+//     * 内层的list，[0]代表图片地址，后面的元素代表缺陷数量和类型
+//     *
+//     * @return java.util.List<java.util.List < java.lang.String>>
+//     * @author koveer
+//     * -2023/2/20 14:04
+//     */
+//    @Deprecated
+//    public List<List<String>> runDetect() {
+//        Process proc;
+//        List<List<String>> list = new ArrayList<>();
+//        try {
+//
+//            String[] cmd = new String[]{pythonPath + "\\venv\\Scripts\\detect.bat"};
+//            proc = Runtime.getRuntime().exec(cmd, null, new File(pythonPath + "\\venv\\Scripts"));
+//            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream(), "gbk"));
+//            String line = null;
+//            while ((line = in.readLine()) != null) {
+////                System.out.println("********************");
+////                System.out.println(line);
+//                if (line.startsWith("image")) {
+//                    //temp[0] 图片位置 剩下的是缺陷数量 缺陷类型
+////                    System.out.println("********************");
+////                    System.out.println(line);
+//                    String[] ss = line.split(" ");
+//                    List<String> temp = new ArrayList<>();
+//                    temp.add(ss[2].substring(0, ss[2].length() - 1));
+//                    for (String s :
+//                            ss) {
+//                        if (s.startsWith("[") && s.endsWith("]"))
+//                            temp.add(s.substring(1, s.length() - 1));
+//                    }
+//                    list.add(temp);
+//                }
+//            }
+//            in.close();
+//            proc.waitFor();
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
 
     /**
      * 对于形如 image 图片路径 [缺陷数量,缺陷类型] [缺陷数量,缺陷类型]@格式的字符串，外层层List每一个元素代表一张图片对应的输出
@@ -205,15 +201,16 @@ public class DetectService {
             //temp[0] 图片位置 剩下的是缺陷数量 缺陷类型
             String[] ss = line[i].split(" ");
             List<String> temp = new ArrayList<>();
-            System.out.println("****************");
-            System.out.println(Arrays.toString(ss));
+//            System.out.println("****************");
+//            System.out.println(Arrays.toString(ss));
             //图片位置
             temp.add(ss[2].substring(0, ss[2].length() - 1));
             for (String s :
                     ss) {
-                if (s.startsWith("[") && s.endsWith("]"))
+                if (s.startsWith("[") && s.endsWith("]")) {
                     //遍历缺陷
                     temp.add(s.substring(1, s.length() - 1));
+                }
             }
 //                    System.out.println(temp);
             list.add(temp);

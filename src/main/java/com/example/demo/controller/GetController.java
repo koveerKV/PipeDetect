@@ -15,7 +15,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -252,14 +251,8 @@ public class GetController {
 
     @GetMapping("/batch")
     public String batch() throws IOException {
-//        Batch[] batches = batchMapper.selectAll();
-//        return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, batches)).replace("name","Value");
-        Path path = Paths.get("E:\\example.txt");
-        List<String> list = Files.readAllLines(path);
-        String json = "{" +
-                "\"list\": " + JSONObject.toJSONString(list) +
-                "}";
-        return json;
+        Batch[] batches = batchMapper.selectAll();
+        return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, batches)).replace("name","Value");
     }
 
     /**
@@ -276,4 +269,13 @@ public class GetController {
         return JSONObject.toJSONString(new Message(MessageCode.SUCCESS, names)).replace("pName","Value");
     }
 
+//    @GetMapping("/read")
+//    public String readTXT() throws IOException {
+//        Path path = Paths.get("E:\\example.txt");
+//        List<String> list = Files.readAllLines(path);
+//        String json = "{" +
+//                "\"list\": " + JSONObject.toJSONString(list) +
+//                ",\"code\": 200}";
+//        return json;
+//    }
 }
